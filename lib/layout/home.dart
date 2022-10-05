@@ -17,7 +17,6 @@ class Home extends StatelessWidget {
   var taskTime = TextEditingController();
   var taskDate = TextEditingController();
   var taskDescription = TextEditingController();
-  Color commonColor = Colors.grey.shade200;
 
   @override
   Widget build(BuildContext context) {
@@ -31,9 +30,65 @@ class Home extends StatelessWidget {
           return Scaffold(
             extendBody: true,
             key: scaffoldKey,
-            appBar: AppBar(
-              title: Text(cubit.titles[cubit.selectIndex]),
-              backgroundColor: defaultColor,
+            body: NestedScrollView(
+              floatHeaderSlivers: true,
+              headerSliverBuilder: (context, innerBoxIsScrolled) => [
+                SliverAppBar(
+                  floating: true,
+                  title: Text(cubit.titles[cubit.selectIndex]),
+                  backgroundColor: defaultColor,
+                  actions: [
+                    IconButton(
+                      onPressed: () {
+                        if (cubit.newTasks.isEmpty && cubit.archivedTasks.isEmpty && cubit.doneTasks.isEmpty) {
+                          showDialog(
+                              context: context,
+                              builder: (builder) => SimpleDialog(
+                                    children: [
+                                      Column(
+                                        children: [
+                                          const Padding(
+                                            padding: EdgeInsets.all(8.0),
+                                            child: Text(
+                                              'Already Clear',
+                                              style: TextStyle(
+                                                fontSize: 18.0,
+                                                fontWeight: FontWeight.w500,
+                                              ),
+                                            ),
+                                          ),
+                                          Container(
+                                            width: 70.0,
+                                            decoration: BoxDecoration(
+                                              color: Colors.green,
+                                              borderRadius: BorderRadius.circular(5.0),
+                                            ),
+                                            child: TextButton(
+                                              onPressed: () => Navigator.pop(context),
+                                              child: const Text(
+                                                'Cancel',
+                                                style: TextStyle(
+                                                  color: Colors.white,
+                                                  fontSize: 16.0,
+                                                ),
+                                              ),
+                                            ),
+                                          ),
+                                        ],
+                                      ),
+                                    ],
+                                  ));
+                        } else {
+                          showSimpleDialog(
+                              context, cubit.newTasks.length, cubit.doneTasks.length, cubit.archivedTasks.length);
+                        }
+                      },
+                      icon: const Icon(Icons.delete),
+                    ),
+                  ],
+                ),
+              ],
+              body: screens[cubit.selectIndex],
             ),
             floatingActionButton: FloatingActionButton(
               backgroundColor: defaultColor,
@@ -67,6 +122,8 @@ class Home extends StatelessWidget {
                                 ),
                                 const SizedBox(height: 15.0),
                                 defaultTextField(
+                                  maxLength: 150,
+                                  isCounterTextShown: true,
                                   controller: taskDescription,
                                   labelText: 'Task Description',
                                   keyboardType: TextInputType.text,
@@ -163,7 +220,6 @@ class Home extends StatelessWidget {
                 items: itemsNavigationBar,
               ),
             ),
-            body: screens[cubit.selectIndex],
           );
         },
       ),
@@ -176,4 +232,83 @@ class Home extends StatelessWidget {
     taskDate.clear();
     taskDescription.clear();
   }
+
+  void showSimpleDialog(BuildContext context, int newTask, int doneTask, int archivedTask) => showDialog(
+        context: context,
+        builder: (builder) => SimpleDialog(
+          title: const Text('Hint!'),
+          children: <Widget>[
+            SimpleDialogOption(
+              padding: const EdgeInsets.symmetric(horizontal: 24, vertical: 16),
+              child: Column(
+                children: [
+                  const Text(
+                    'If you press Delete you will lose the saved data',
+                    style: TextStyle(fontSize: 16.0),
+                  ),
+                  const SizedBox(height: 8.0),
+                  newTask > 0
+                      ? Text(
+                          '$newTask New task',
+                          style: const TextStyle(fontSize: 16.0),
+                        )
+                      : Container(height: 0),
+                  doneTask > 0
+                      ? Text(
+                          '$doneTask done task',
+                          style: const TextStyle(fontSize: 16.0),
+                        )
+                      : Container(height: 0),
+                  archivedTask > 0
+                      ? Text(
+                          '$archivedTask archived task',
+                          style: const TextStyle(fontSize: 16.0),
+                        )
+                      : Container(height: 0),
+                ],
+              ),
+            ),
+            Row(
+              mainAxisAlignment: MainAxisAlignment.spaceAround,
+              children: [
+                Container(
+                  decoration: BoxDecoration(
+                    color: Colors.green,
+                    borderRadius: BorderRadius.circular(5.0),
+                  ),
+                  child: TextButton(
+                    onPressed: () => Navigator.pop(context),
+                    child: const Text(
+                      'Cancel',
+                      style: TextStyle(
+                        color: Colors.white,
+                        fontSize: 16.0,
+                      ),
+                    ),
+                  ),
+                ),
+                Container(
+                  decoration: BoxDecoration(
+                    color: Colors.red,
+                    borderRadius: BorderRadius.circular(5.0),
+                  ),
+                  child: TextButton(
+                    onPressed: () {
+                      AppCubit.get(context).clearData();
+                      Navigator.pop(context);
+                    },
+                    child: const Text(
+                      'Delete',
+                      style: TextStyle(
+                        color: Colors.white,
+                        fontSize: 16.0,
+                      ),
+                    ),
+                  ),
+                ),
+              ],
+            ),
+          ],
+        ),
+      );
 }

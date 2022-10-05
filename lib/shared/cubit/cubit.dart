@@ -104,5 +104,16 @@ class AppCubit extends Cubit<AppStates> {
     emit(AppDeleteDatabaseState());
   }
 
+  void clearData() {
+    database.rawDelete('DROP TABLE tasks').then((value) {
+      database
+          .execute(
+              'CREATE TABLE tasks (id INTEGER PRIMARY KEY, title TEXT, description TEXT, date TEXT, time TEXT, status TEXT)')
+          .then((value) {});
+      getDataFromDatabase(database);
+      emit(AppDeleteDatabaseState());
+    });
+  }
+
   static AppCubit get(context) => BlocProvider.of(context);
 }

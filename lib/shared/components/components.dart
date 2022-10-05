@@ -5,6 +5,8 @@ import 'package:todo/shared/cubit/cubit.dart';
 Widget defaultTextField({
   required controller,
   required String labelText,
+  bool isCounterTextShown = false,
+  maxLength = 25,
   prefixIcon,
   keyboardType,
   onTap,
@@ -17,7 +19,9 @@ Widget defaultTextField({
         keyboardType: keyboardType,
         validator: validate,
         onTap: onTap,
+        maxLength: maxLength,
         decoration: InputDecoration(
+          counterText: isCounterTextShown ? null : "",
           labelText: labelText,
           prefixIcon: prefixIcon,
           enabledBorder: OutlineInputBorder(

@@ -16,3 +16,4 @@ List<Widget> itemsNavigationBar = const [
 ];
 
 dynamic defaultColor = const Color.fromRGBO(153, 51, 255, 1);
+Color commonColor = Colors.grey.shade200;
