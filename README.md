@@ -30,6 +30,9 @@ samples, guidance on mobile development, and a full API reference.
 
 <a href="https://www.linkedin.com/in/abdelrahman-mohammed-814a9022a/" target="_blank"><img alt="Google Play" src="https://img.shields.io/badge/linkedin-0077b5.svg?style=for-the-badge&logo=linkedin&logoColor=white" /></a> 
 
+<!---
 <a href="https://www.facebook.com/profile.php?id=100007151113145" target="_blank"><img alt="Google Play" src="https://img.shields.io/badge/Facebook-4267B2.svg?style=for-the-badge&logo=facebook&logoColor=white" /></a>
+-->
+
 
 abdelrahmansalby23@gmail.com
